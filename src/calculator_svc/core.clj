@@ -1,13 +1,12 @@
 (ns calculator-svc.core)
 
 (defn start-service
- []
- (println "starting service"))
+  []
+  (println "starting service"))
 
 (defn stop-service
   []
   (println "stopping service"))
-
 
 (defn -main [& _args]
   (java.util.TimeZone/setDefault (java.util.TimeZone/getTimeZone "UTC"))
