@@ -22,8 +22,11 @@
   (testing "Tests division operation by 0 "
     (is (= {:error "Divide by zero"} (sut/calculates :division 5 0))))
 
-  (testing "Tests squareroot operation"
-    (is (= {:result 5.0} (sut/calculates :squareroot 25))))
+  (testing "Tests square-root operation"
+    (is (= {:result 5.0} (sut/calculates :square-root 25))))
 
-  (testing "Tests squareroot operation with negative number"
-    (is (NaN? (:error (sut/calculates :squareroot -9))))))
+  (testing "Tests square-root operation with negative number"
+    (is (NaN? (:error (sut/calculates :square-root -9)))))
+  
+  (testing "Tests invalid operation"
+    (is (thrown? java.lang.AssertionError (sut/calculates :power 5 2)))))

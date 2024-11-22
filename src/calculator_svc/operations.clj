@@ -8,10 +8,11 @@
    :subtraction -
    :multiplication *
    :division /
-   :squareroot sqrt})
+   :square-root sqrt})
 
 (defn calculates
   [ops & args]
+  {:pre [(contains? operations ops)]}
   (try
     (let [result (apply (ops operations) args)]
       (if (NaN? result)
