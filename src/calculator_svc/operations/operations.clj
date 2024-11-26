@@ -1,4 +1,4 @@
-(ns calculator-svc.operations
+(ns calculator-svc.operations.operations
   (:require
    [clojure.math :refer [sqrt]]
    [clojure.tools.logging :as log]))

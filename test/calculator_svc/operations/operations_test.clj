@@ -1,6 +1,6 @@
-(ns calculator-svc.operations-test
+(ns calculator-svc.operations.operations-test
   (:require
-   [calculator-svc.operations :as sut]
+   [calculator-svc.operations.operations :as sut]
    [clojure.test :refer [deftest is testing]]))
 
 (deftest addition-operation-test
@@ -27,6 +27,6 @@
 
   (testing "Tests square-root operation with negative number"
     (is (NaN? (:error (sut/calculates :square-root -9)))))
-  
+
   (testing "Tests invalid operation"
     (is (thrown? java.lang.AssertionError (sut/calculates :power 5 2)))))
