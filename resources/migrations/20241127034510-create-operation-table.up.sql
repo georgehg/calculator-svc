@@ -1,8 +1,7 @@
-CREATE TABLE operations.user (
+CREATE TABLE operations.operation (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    status ENUM('active', 'inactive') DEFAULT 'active' NOT NULL,
+    type ENUM('addition', 'subtraction', 'multiplication', 'division', 'square_root', 'random_string') NOT NULL,
+    cost DECIMAL(10, 2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP DEFAULT NULL
