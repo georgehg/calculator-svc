@@ -1,0 +1,25 @@
+{:env          #profile {:default :local
+                         :test    :test
+                         :prod    :prod}
+
+ :container-id #or [#env HOSTNAME "calculator"]
+
+ :server {:type  :jetty
+          :host  #profile {:default "localhost"
+                           :test    "0.0.0.0"
+                           :prod    "0.0.0.0"}
+          :port  #or [#env PORT "15042"]
+          :join? false}
+
+ :mysql     {:database               #profile {:default "calculatordb"
+                                               :test    "calculatordb"
+                                               :prod    "calculatordb"}
+             :host                   #or [#env MYSQL_HOST "localhost"]
+             :port                   #long #or [#env MYSQL_PORT "3306"]
+             :username               #or [#env MYSQL_USER "root"]
+             :password               #or [#env MYSQL_PASS "arithmetic"]
+             :socket-timeout-seconds 60
+             :maximum-pool-size      10}
+
+ :migration {:migrations-dir        "resources/migrations/"
+             :migrations-table-name "schema_migrations"}}
