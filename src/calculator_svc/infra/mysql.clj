@@ -63,8 +63,17 @@
     (first (sql/find-by-keys connection
                              :operations.operation
                              {:type (name operation)}
-                             {:columns [:cost]
-                              :builder-fn rs/as-unqualified-lower-maps}))))
+                             {:columns [:id :cost]
+                              :builder-fn rs/as-unqualified-lower-maps})))
+
+  (record-operation [_ user-id operation-id cost user-balance response]
+    (:GENERATED_KEY (sql/insert! connection
+                                 :operations.record
+                                 {:user_id user-id
+                                  :operation_id operation-id
+                                  :amount cost
+                                  :user_balance (- user-balance cost)
+                                  :operation_response (name response)}))))
 
 (defn new-mysql
   [config]

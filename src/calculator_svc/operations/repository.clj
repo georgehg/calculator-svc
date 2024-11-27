@@ -3,4 +3,4 @@
 (defprotocol OperationsRepository
   (test-connection [connectable])
   (get-operation-cost [connectable operation])
-  (record-operation [connectable user-id operation-id amount user-balance response]))
+  (record-operation [connectable user-id operation-id cost user-balance response]))

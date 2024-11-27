@@ -1,7 +1,7 @@
 CREATE TABLE operations.record (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    operation_id INT NOT NULL,
     user_id INT NOT NULL,
+    operation_id INT NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
     user_balance DECIMAL(10, 2) NOT NULL,
     operation_response TEXT NOT NULL,
