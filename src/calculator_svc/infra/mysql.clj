@@ -6,7 +6,8 @@
    [migratus.core :as migratus]
    [next.jdbc :as jdbc]
    [next.jdbc.connection :as connection]
-   [next.jdbc.result-set :as rs])
+   [next.jdbc.result-set :as rs]
+   [next.jdbc.sql :as sql])
   (:import
    [com.zaxxer.hikari HikariDataSource]))
 
@@ -54,9 +55,16 @@
       (dissoc this :connection :config)))
 
   repository/OperationsRepository
-  (test-connection [this]
-    (jdbc/execute-one! (:connection this) ["Select 'OK' as status"]
-                       {:builder-fn rs/as-unqualified-lower-maps})))
+  (test-connection [_]
+    (jdbc/execute-one! connection ["Select 'OK' as status"]
+                       {:builder-fn rs/as-unqualified-lower-maps}))
+
+  (get-operation-cost [_ operation]
+    (first (sql/find-by-keys connection
+                             :operations.operation
+                             {:type (name operation)}
+                             {:columns [:cost]
+                              :builder-fn rs/as-unqualified-lower-maps}))))
 
 (defn new-mysql
   [config]

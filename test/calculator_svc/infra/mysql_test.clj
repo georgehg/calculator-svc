@@ -21,3 +21,8 @@
     (testing "Test Postgres database connection status"
       (let [db-status (repository/test-connection (:component/db.mysql sut))]
         (is (= {:status "OK"} db-status))))))
+
+(deftest tests-get-operation-costs
+  (with-system [sut (db-system)]
+    (testing "Test Postgres database connection status"
+      (is (= {:cost 0.50M} (repository/get-operation-cost (:component/db.mysql sut) :addition))))))
