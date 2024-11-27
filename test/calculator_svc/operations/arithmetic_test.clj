@@ -1,6 +1,6 @@
-(ns calculator-svc.operations.operations-test
+(ns calculator-svc.operations.arithmetic-test
   (:require
-   [calculator-svc.operations.operations :as sut]
+   [calculator-svc.operations.arithmetic :as sut]
    [clojure.test :refer [deftest is testing]]))
 
 (deftest addition-operation-test
