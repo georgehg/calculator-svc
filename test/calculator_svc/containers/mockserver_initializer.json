@@ -1,6 +1,20 @@
-[
+  [
   {
     "httpRequest": {
+      "path": "/health",
+      "headers": {
+        "Accept": [
+          "application/json"
+        ]
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200
+    }
+  },
+  {
+    "httpRequest": {
+     "path": "/strings",
      "method": "get"
     },
     "httpResponse": {
@@ -11,6 +25,21 @@
         ]
       },
       "body": "wdJoaGkPbKlD2AYJQE9I"
+    }
+  },
+  {
+    "httpRequest": {
+     "path": "/integers",
+     "method": "get"
+    },
+    "httpResponse": {
+      "statusCode": 503,
+      "headers": {
+        "content-type": [
+          "text/plain"
+        ]
+      },
+      "body": "The minimum value must be an integer"
     }
   }
 ]

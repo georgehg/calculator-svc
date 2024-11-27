@@ -38,7 +38,7 @@
                                 :url          url
                                 :body         body
                                 :request-time request-time})
-          {:error (ex-message ex)})))))
+          {:error (or body (ex-message ex))})))))
 
 (defn new-random-str-client
   ([]
