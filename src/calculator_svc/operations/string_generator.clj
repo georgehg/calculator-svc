@@ -4,5 +4,5 @@
   (random-string [this]))
 
 (defn gen-string
-  [this]
-  (random-string this))
+  [client]
+  (random-string client))

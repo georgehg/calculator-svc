@@ -1,0 +1,16 @@
+[
+  {
+    "httpRequest": {
+     "method": "get"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": [
+          "text/plain"
+        ]
+      },
+      "body": "wdJoaGkPbKlD2AYJQE9I"
+    }
+  }
+]

@@ -19,10 +19,7 @@
                            ;:debug              true
                            :http-client        http-client
                            :connection-manager cm}]
-
-      (-> this
-          (assoc :url "https://www.random.org/strings/?num=1&len=20&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new"
-                 :default-request default-request))))
+      (assoc this :default-request default-request)))
 
   (stop [this]
     (conn-mgr/shutdown-manager (:connection-manager default-request))
@@ -42,3 +39,9 @@
                                 :body         body
                                 :request-time request-time})
           {:error (ex-message ex)})))))
+
+(defn new-random-str-client
+  ([]
+   (new-random-str-client "https://www.random.org/strings/?num=1&len=20&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new"))
+  ([url]
+   (map->RandomSTRClient {:url url})))
