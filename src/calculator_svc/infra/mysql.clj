@@ -94,11 +94,19 @@
     (-> (sql/query connection
                    ["SELECT COUNT(*) as count
                      FROM operations.record
-                     WHERE user_id = ?"
+                     WHERE user_id = ?
+                     AND deleted_at IS NULL"
                     user-id]
                    {:builder-fn rs/as-unqualified-lower-maps})
         first
-        :count)))
+        :count))
+
+  (delete-operation [_ id]
+    (sql/update! connection
+                 :operations.record
+                 {:deleted_at (java.time.Instant/now)}
+                 {:id id
+                  :deleted_at nil})))
 
 (defn new-mysql
   [config]

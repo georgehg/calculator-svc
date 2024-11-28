@@ -85,4 +85,9 @@
                           (:id operation)
                           (:cost operation)
                           8.75M)
-        (is (= 3 (repository/count-operations (:component/db.mysql sut) 1)))))))
+        (is (= 3 (repository/count-operations (:component/db.mysql sut) 1)))))
+
+    (testing "Tests soft delete operation"
+      (is (= 3 (repository/count-operations (:component/db.mysql sut) 1)))
+      (repository/delete-operation (:component/db.mysql sut) 1)
+      (is (= 2 (repository/count-operations (:component/db.mysql sut) 1))))))
