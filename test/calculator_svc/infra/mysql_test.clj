@@ -3,7 +3,7 @@
   (:require
    [calculator-svc.containers.mysql-container :as container]
    [calculator-svc.helpers :refer [with-system]]
-   [calculator-svc.infra.mysql :refer [new-mysql]]
+   [calculator-svc.infra.mysql-adapter :refer [new-mysql]]
    [calculator-svc.operations.repository :as repository]
    [clojure.test :refer [deftest is testing use-fixtures]]
    [com.stuartsierra.component :as component]
