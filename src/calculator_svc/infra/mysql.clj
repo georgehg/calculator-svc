@@ -72,8 +72,23 @@
                                  {:user_id user-id
                                   :operation_id operation-id
                                   :amount cost
-                                  :user_balance (- user-balance cost)
-                                  :operation_response (name response)}))))
+                                  :user_balance user-balance
+                                  :operation_response (name response)})))
+
+  (get-operations-records [_ user-id page-number page-limit]
+    (sql/query connection
+               ["SELECT r.id, u.username, o.type, r.amount, r.user_balance, r.operation_response, r.created_at
+                 FROM operations.record r
+                 JOIN operations.user u ON u.id = r.user_id
+                 JOIN operations.operation o ON o.id = r.operation_id
+                 WHERE r.user_id = ?
+                 AND r.deleted_at IS NULL
+                 ORDER BY r.created_at DESC
+                 LIMIT ?, ?"
+                user-id
+                page-number
+                page-limit]
+               {:builder-fn rs/as-unqualified-lower-maps})))
 
 (defn new-mysql
   [config]
