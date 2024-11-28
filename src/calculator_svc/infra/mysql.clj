@@ -88,7 +88,17 @@
                 user-id
                 page-number
                 page-limit]
-               {:builder-fn rs/as-unqualified-lower-maps})))
+               {:builder-fn rs/as-unqualified-lower-maps}))
+
+  (count-operations [_ user-id]
+    (-> (sql/query connection
+                   ["SELECT COUNT(*) as count
+                     FROM operations.record
+                     WHERE user_id = ?"
+                    user-id]
+                   {:builder-fn rs/as-unqualified-lower-maps})
+        first
+        :count)))
 
 (defn new-mysql
   [config]
