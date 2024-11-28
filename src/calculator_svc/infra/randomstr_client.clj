@@ -1,11 +1,7 @@
 (ns calculator-svc.infra.randomstr-client
   (:require
-   [calculator-svc.operations.string-generator :as str-gen]
-   [clj-http.client :as client]
    [clj-http.conn-mgr :as conn-mgr]
    [clj-http.core :as http]
-   [clojure.string :refer [trim-newline]]
-   [clojure.tools.logging :as log]
    [com.stuartsierra.component :as component]))
 
 (defrecord RandomSTRClient [url default-request]
@@ -23,22 +19,7 @@
 
   (stop [this]
     (conn-mgr/shutdown-manager (:connection-manager default-request))
-    (assoc this :default-request nil))
-
-  str-gen/StringGenerator
-  (random-string [_]
-    (try
-      (let [{:keys [body]} (client/get url default-request)]
-        {:success (trim-newline body)})
-
-      (catch Exception ex
-        (let [{:keys [status body request-time]}
-              (select-keys (ex-data ex) [:request-time :status :body])]
-          (log/error :response {:status       status
-                                :url          url
-                                :body         body
-                                :request-time request-time})
-          {:error (or body (ex-message ex))})))))
+    (assoc this :default-request nil)))
 
 (defn new-random-str-client
   ([]

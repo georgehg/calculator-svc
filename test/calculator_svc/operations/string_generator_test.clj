@@ -22,8 +22,8 @@
 (deftest addition-operation-test
   (testing "Tests random string generation"
     (is (= {:success "wdJoaGkPbKlD2AYJQE9I"}
-           (sut/gen-string (new-random-str-client (str (container->url mockserver-container) "/strings"))))))
+           (sut/random-string (new-random-str-client (str (container->url mockserver-container) "/strings"))))))
 
   (testing "Tests random string generation with erors"
     (is (= {:error "The minimum value must be an integer"}
-           (sut/gen-string (new-random-str-client (str (container->url mockserver-container) "/integers")))))))
+           (sut/random-string (new-random-str-client (str (container->url mockserver-container) "/integers")))))))

@@ -1,7 +1,6 @@
 (ns calculator-svc.operations.arithmetic
   (:require
-   [clojure.math :refer [sqrt]]
-   [clojure.tools.logging :as log]))
+   [clojure.math :refer [sqrt]]))
 
 (def operations
   {:addition +
@@ -11,13 +10,13 @@
    :square-root sqrt})
 
 (defn calculates
+  "Execute arithmetic calculation with given operation and args"
   [ops & args]
   {:pre [(contains? operations ops)]}
   (try
     (let [result (apply (ops operations) args)]
       (if (NaN? result)
         {:error result}
-        {:result result}))
+        {:success result}))
     (catch Exception ex
-      (log/error :unsupported-operation {:operation ops :args args :exception ex})
       {:error (ex-message ex)})))

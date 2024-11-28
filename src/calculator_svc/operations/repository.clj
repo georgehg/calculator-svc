@@ -1,6 +1,5 @@
 (ns calculator-svc.operations.repository
   (:require
-   [calculator-svc.operations.repository :as repository]
    [next.jdbc :as jdbc]
    [next.jdbc.result-set :as rs]
    [next.jdbc.sql :as sql])
@@ -16,7 +15,7 @@
   (delete-operation [connectable id]))
 
 (extend-type MySQL
-  repository/OperationsRepository
+  OperationsRepository
   (test-connection [this]
     (jdbc/execute-one! (:connection this) ["Select 'OK' as status"]
                        {:builder-fn rs/as-unqualified-lower-maps}))
