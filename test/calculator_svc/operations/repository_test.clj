@@ -27,12 +27,6 @@
                                (- user-balance cost)
                                :success))
 
-(deftest tests-connection-status
-  (with-system [sut (db-system)]
-    (testing "Test MySQL database connection status"
-      (let [db-status (repository/test-connection (:component/db.mysql sut))]
-        (is (= {:status "OK"} db-status))))))
-
 (deftest tests-get-operation-costs
   (with-system [sut (db-system)]
     (testing "Tests query for operation cost"

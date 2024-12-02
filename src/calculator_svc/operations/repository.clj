@@ -7,7 +7,6 @@
    (calculator_svc.infra.mysql_adapter MySQL)))
 
 (defprotocol OperationsRepository
-  (test-connection [connectable])
   (get-operation-cost [connectable operation])
   (record-operation [connectable user-id operation-id cost user-balance response])
   (get-operations-records [connectable user-id page-number page-limit])
@@ -16,10 +15,6 @@
 
 (extend-type MySQL
   OperationsRepository
-  (test-connection [this]
-    (jdbc/execute-one! (:connection this) ["Select 'OK' as status"]
-                       {:builder-fn rs/as-unqualified-lower-maps}))
-
   (get-operation-cost [this operation]
     (first (sql/find-by-keys (:connection this)
                              :operations.operation
