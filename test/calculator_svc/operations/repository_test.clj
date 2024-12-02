@@ -1,4 +1,4 @@
-(ns calculator-svc.infra.mysql-test
+(ns calculator-svc.operations.repository-test
   {:clj-kondo/config '{:linters {:unresolved-symbol {:exclude [sut]}}}}
   (:require
    [calculator-svc.containers.mysql-container :as container]
