@@ -1,6 +1,5 @@
 (ns calculator-svc.operations.repository
   (:require
-   [next.jdbc :as jdbc]
    [next.jdbc.result-set :as rs]
    [next.jdbc.sql :as sql])
   (:import
@@ -11,7 +10,7 @@
   (record-operation [connectable user-id operation-id cost user-balance response])
   (get-operations-records [connectable user-id page-number page-limit])
   (count-operations [connectable user-id])
-  (delete-operation [connectable id]))
+  (delete-operation [connectable operation-id]))
 
 (extend-type MySQL
   OperationsRepository
@@ -57,9 +56,9 @@
         first
         :count))
 
-  (delete-operation [this id]
+  (delete-operation [this operation-id]
     (sql/update! (:connection this)
                  :operations.record
                  {:deleted_at (java.time.Instant/now)}
-                 {:id id
+                 {:id operation-id
                   :deleted_at nil})))
