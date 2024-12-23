@@ -5,28 +5,28 @@
 
 (deftest addition-operation-test
   (testing "Tests addition operation"
-    (is (= {:success 10} (sut/calculates :addition 5 5))))
+    (is (= {:success 10} (sut/calculates :operations/addition 5 5))))
 
   (testing "Tests subtraction operation"
-    (is (= {:success 2} (sut/calculates :subtraction 5 3))))
+    (is (= {:success 2} (sut/calculates :operations/subtraction 5 3))))
 
   (testing "Tests negative subtraction operation"
-    (is (= {:success -5} (sut/calculates :subtraction 5 10))))
+    (is (= {:success -5} (sut/calculates :operations/subtraction 5 10))))
 
   (testing "Tests multiplication operation"
-    (is (= {:success 25} (sut/calculates :multiplication 5 5))))
+    (is (= {:success 25} (sut/calculates :operations/multiplication 5 5))))
 
   (testing "Tests division operation"
-    (is (= {:success 1} (sut/calculates :division 5 5))))
+    (is (= {:success 1} (sut/calculates :operations/division 5 5))))
 
   (testing "Tests division operation by 0 "
-    (is (= {:error "Divide by zero"} (sut/calculates :division 5 0))))
+    (is (= {:error "Divide by zero"} (sut/calculates :operations/division 5 0))))
 
   (testing "Tests square-root operation"
-    (is (= {:success 5.0} (sut/calculates :square-root 25))))
+    (is (= {:success 5.0} (sut/calculates :operations/square-root 25))))
 
   (testing "Tests square-root operation with negative number"
-    (is (NaN? (:error (sut/calculates :square-root -9)))))
+    (is (NaN? (:error (sut/calculates :operations/square-root -9)))))
 
   (testing "Tests invalid operation"
     (is (thrown? java.lang.AssertionError (sut/calculates :power 5 2)))))

@@ -1,13 +1,14 @@
 (ns calculator-svc.operations.arithmetic
   (:require
-   [clojure.math :refer [sqrt]]))
+   [clojure.math :refer [sqrt]]
+   [io.pedestal.http.specs]))
 
 (def operations
-  {:addition +
-   :subtraction -
-   :multiplication *
-   :division /
-   :square-root sqrt})
+  {:operations/addition +
+   :operations/subtraction -
+   :operations/multiplication *
+   :operations/division /
+   :operations/square-root sqrt})
 
 (defn calculates
   "Execute arithmetic calculation with given operation and args"
