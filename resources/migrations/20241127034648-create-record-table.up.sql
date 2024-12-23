@@ -4,7 +4,7 @@ CREATE TABLE operations.record (
     operation_id INT NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
     user_balance DECIMAL(10, 2) NOT NULL,
-    operation_response TEXT NOT NULL,
+    operation_result TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP DEFAULT NULL,

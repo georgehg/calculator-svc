@@ -19,13 +19,13 @@
 (use-fixtures :once container/mysql-fixtures)
 
 (defn- record-operation
-  [sut user-id operation-id cost user-balance]
+  [sut user-id operation-id cost user-balance result]
   (ops-repo/record-operation sut
                              user-id
                              operation-id
                              cost
                              (- user-balance cost)
-                             :success))
+                             result))
 
 (deftest tests-get-operation-costs
   (with-system [sut (db-system)]
@@ -42,17 +42,18 @@
                                         (:user/id user)
                                         (:id operation)
                                         (:cost operation)
-                                        (:user/user_balance user))]
+                                        (:user/user_balance user)
+                                        {:success 15})]
         (is (= {:id 1
                 :user_id 1
                 :operation_id 1
                 :amount 0.50M
                 :user_balance 9.50M
-                :operation_response "success"}
+                :operation_result "{:success 15}"}
                (-> (sql/get-by-id con :operations.record
                                   record-id
                                   {:builder-fn rs/as-unqualified-lower-maps})
-                   (select-keys [:id :user_id :operation_id :amount :user_balance :operation_response]))))))
+                   (select-keys [:id :user_id :operation_id :amount :user_balance :operation_result]))))))
 
     (testing "Tests query for paginated operation records"
       (let [operation (ops-repo/get-operation-cost (:component/db.mysql sut) :operations/multiplication)]
@@ -60,16 +61,17 @@
                           1
                           (:id operation)
                           (:cost operation)
-                          9.50M)
-        (is (= 2 (count (ops-repo/get-operations-records (:component/db.mysql sut) 1  0 2))))
-        (is (= {:id 1
+                          9.50M
+                          {:success 30})
+        (is (= 2 (count (ops-repo/get-operations-records (:component/db.mysql sut) 1 0 2))))
+        (is (= {:id 2
                 :username "john.doe@example.com"
-                :type "addition"
-                :amount 0.50M
-                :user_balance 9.50M
-                :operation_response "success"}
-               (-> (ops-repo/get-operations-records (:component/db.mysql sut) 1  0 1)
-                   first
+                :type "multiplication"
+                :amount 0.75M
+                :user_balance 8.75M
+                :operation_result "{:success 30}"}
+               (-> (ops-repo/get-operations-records (:component/db.mysql sut) 1 0 2)
+                   second
                    (dissoc :created_at))))))
 
     (testing "Tests query for count operation records"
@@ -78,7 +80,8 @@
                           1
                           (:id operation)
                           (:cost operation)
-                          8.75M)
+                          8.75M
+                          {:success 3})
         (is (= 3 (ops-repo/count-operations (:component/db.mysql sut) 1)))))
 
     (testing "Tests soft delete operation"

@@ -7,7 +7,7 @@
 
 (defprotocol OperationsRepository
   (get-operation-cost [connectable operation])
-  (record-operation [connectable user-id operation-id cost user-balance response])
+  (record-operation [connectable user-id operation-id cost user-balance result])
   (get-operations-records [connectable user-id page-number page-limit])
   (count-operations [connectable user-id])
   (delete-operation [connectable operation-id]))
@@ -21,18 +21,19 @@
                              {:columns [:id :cost]
                               :builder-fn rs/as-unqualified-lower-maps})))
 
-  (record-operation [this user-id operation-id cost user-balance response]
+  (record-operation [this user-id operation-id cost user-balance result]
     (:GENERATED_KEY (sql/insert! (:connection this)
                                  :operations.record
                                  {:user_id user-id
                                   :operation_id operation-id
                                   :amount cost
                                   :user_balance user-balance
-                                  :operation_response (name response)})))
+                                  :operation_result (str result)})))
 
   (get-operations-records [this user-id page-number page-limit]
     (sql/query (:connection this)
-               ["SELECT r.id, u.username, o.type, r.amount, r.user_balance, r.operation_response, r.created_at
+               ["SELECT r.id, u.username, o.type, r.amount, r.user_balance,
+                        r.operation_result, r.created_at
                  FROM operations.record r
                  JOIN operations.user u ON u.id = r.user_id
                  JOIN operations.operation o ON o.id = r.operation_id
