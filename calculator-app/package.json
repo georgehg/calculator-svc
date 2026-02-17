@@ -1,0 +1,26 @@
+{
+  "name": "calculator-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "George Silva",
+  "license": "ISC",
+  "description": "calculator-app",
+  "repository": {
+    "type": "git",
+    "url": "calculator-app"
+  },
+  "keywords": [
+    "arithmetic",
+    "calculator",
+    "frontend"
+  ],
+  "devDependencies": {
+    "shadow-cljs": "^2.28.14"
+  },
+  "dependencies": {
+    "react-dom": "^18.3.1"
+  }
+}
