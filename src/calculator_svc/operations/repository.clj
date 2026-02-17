@@ -6,23 +6,23 @@
    (calculator_svc.infra.mysql_adapter MySQL)))
 
 (defprotocol OperationsRepository
-  (get-operation-cost [connectable operation])
-  (record-operation [connectable user-id operation-id cost user-balance result])
-  (get-operations-records [connectable user-id page-number page-limit])
-  (count-operations [connectable user-id])
-  (delete-operation [connectable operation-id]))
+  (get-operation-cost [sourceable operation])
+  (record-operation [sourceable user-id operation-id cost user-balance result])
+  (get-operations-records [sourceable user-id page-number page-limit])
+  (count-operations [sourceable user-id])
+  (delete-operation [sourceable operation-id]))
 
 (extend-type MySQL
   OperationsRepository
-  (get-operation-cost [this operation]
-    (first (sql/find-by-keys (:connection this)
+  (get-operation-cost [sourceable operation]
+    (first (sql/find-by-keys sourceable
                              :operations.operation
                              {:type (name operation)}
                              {:columns [:id :cost]
                               :builder-fn rs/as-unqualified-lower-maps})))
 
-  (record-operation [this user-id operation-id cost user-balance result]
-    (:GENERATED_KEY (sql/insert! (:connection this)
+  (record-operation [sourceable user-id operation-id cost user-balance result]
+    (:GENERATED_KEY (sql/insert! sourceable
                                  :operations.record
                                  {:user_id user-id
                                   :operation_id operation-id
@@ -30,8 +30,8 @@
                                   :user_balance user-balance
                                   :operation_result (str result)})))
 
-  (get-operations-records [this user-id page-number page-limit]
-    (sql/query (:connection this)
+  (get-operations-records [sourceable user-id page-number page-limit]
+    (sql/query sourceable
                ["SELECT r.id, u.username, o.type, r.amount, r.user_balance,
                         r.operation_result, r.created_at
                  FROM operations.record r
@@ -46,8 +46,8 @@
                 page-limit]
                {:builder-fn rs/as-unqualified-lower-maps}))
 
-  (count-operations [this user-id]
-    (-> (sql/query (:connection this)
+  (count-operations [sourceable user-id]
+    (-> (sql/query sourceable
                    ["SELECT COUNT(*) as count
                      FROM operations.record
                      WHERE user_id = ?
@@ -57,8 +57,8 @@
         first
         :count))
 
-  (delete-operation [this operation-id]
-    (sql/update! (:connection this)
+  (delete-operation [sourceable operation-id]
+    (sql/update! sourceable
                  :operations.record
                  {:deleted_at (java.time.Instant/now)}
                  {:id operation-id

@@ -18,8 +18,8 @@
   )
 
 (defn- config->migration-spec
-  [connection migration-config]
-  (merge {:db {:datasource (jdbc/get-datasource connection)}}
+  [datasource migration-config]
+  (merge {:db {:datasource (jdbc/get-datasource datasource)}}
          migration-config
          {:store :database}))
 
@@ -34,23 +34,30 @@
    :dataSourceProperties {:socketTimeout   socket-timeout-seconds
                           :maximumPoolSize maximum-pool-size}})
 
-(defrecord MySQL [connection config]
+(defrecord MySQL [datasource config]
   component/Lifecycle
   (start [this]
-    (if-not (:connection this)
+    (if-not (:datasource this)
       (let [db-spec (config->db-spec (:mysql config))
-            connection (connection/->pool HikariDataSource db-spec)]
-        (execute-migration (config->migration-spec connection (:migration config)))
-        (log/info :started :mysql-connection :database (-> config :mysql :database))
-        (assoc this :connection connection))
+            datasource (connection/->pool HikariDataSource db-spec)]
+        (execute-migration (config->migration-spec datasource (:migration config)))
+        (log/info :started :mysql-datasource :database (-> config :mysql :database))
+        (assoc this :datasource datasource))
       this))
 
   (stop [this]
-    (when-let [connection (:connection this)]
-      (.close connection)
-      (log/info :stopped :mysql-connection :database (-> config :mysql :database))
-      (dissoc this :connection :config))))
+    (when-let [datasource (:datasource this)]
+      (.close datasource)
+      (log/info :stopped :mysql-datasource :database (-> config :mysql :database))
+      (dissoc this :datasource :config))))
 
 (defn new-mysql
   [config]
   (map->MySQL {:config config}))
+
+(defmacro with-mysql-transaction
+  [[sym db] & body]
+  `(jdbc/with-transaction
+     [~sym ~db]
+     (let [~sym (assoc ~db :datasource ~sym)]
+       ~@body)))

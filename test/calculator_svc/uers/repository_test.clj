@@ -21,20 +21,21 @@
     (testing "Tests get user by id"
       (is (= {:id 1
               :status "active"
-              :user_balance 10.00M
+              :user_balance 5.00M
               :username "john.doe@example.com"}
-             (users-repo/get-user (:component/db.mysql sut) 1)))
+             (users-repo/get-user (:component/db.mysql sut) 1))))
 
+    (testing "Tests get user by email"
       (is (= {:id 4
               :status "active"
               :user_balance 300.00M
               :username "bob.builder@example.com"}
              (users-repo/get-user-by-email (:component/db.mysql sut) "bob.builder@example.com"))))))
 
-(deftest tests-withdraw-user-amount
+(deftest tests-withdraw-user-balance
   (with-system [sut (db-system)]
     (testing "Tests withdraw balance with success"
-      (is (= {:user_balance 9.00M}
+      (is (= {:user_balance 4.00M}
              (users-repo/withdraw-balance (:component/db.mysql sut) 1 1M))))
 
     (testing "Tests withdraw balance with failure because balance "

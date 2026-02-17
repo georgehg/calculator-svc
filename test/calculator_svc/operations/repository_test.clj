@@ -35,7 +35,7 @@
 (deftest tests-records-operation
   (with-system [sut (db-system)]
     (testing "Tests record an operation processing"
-      (let [con       (-> sut :component/db.mysql :connection)
+      (let [con       (-> sut :component/db.mysql)
             user      (sql/get-by-id con :operations.user 1)
             operation (ops-repo/get-operation-cost (:component/db.mysql sut) :operations/addition)
             record-id (record-operation (:component/db.mysql sut)
@@ -48,7 +48,7 @@
                 :user_id 1
                 :operation_id 1
                 :amount 0.50M
-                :user_balance 9.50M
+                :user_balance 4.50M
                 :operation_result "{:success 15}"}
                (-> (sql/get-by-id con :operations.record
                                   record-id

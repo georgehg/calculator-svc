@@ -6,15 +6,15 @@
    (calculator_svc.infra.mysql_adapter MySQL)))
 
 (defprotocol UsersRepository
-  (get-user [connectable user-id])
-  (get-user-by-email [connectable email])
-  (withdraw-balance [connectable user-id amount]))
+  (get-user [sourceable user-id])
+  (get-user-by-email [sourceable email])
+  (withdraw-balance [sourceable user-id amount]))
 
 (extend-type MySQL
   UsersRepository
-  (get-user [this user-id]
+  (get-user [sourceable user-id]
     (first
-     (sql/query (:connection this)
+     (sql/query sourceable
                 ["SELECT id, username, status, user_balance
                   FROM operations.user
                   WHERE id = ?
@@ -22,9 +22,9 @@
                  user-id]
                 {:builder-fn rs/as-unqualified-lower-maps})))
 
-  (get-user-by-email [this email]
+  (get-user-by-email [sourceable email]
     (first
-     (sql/query (:connection this)
+     (sql/query sourceable
                 ["SELECT id, username, status, user_balance
                   FROM operations.user
                   WHERE username = ?
@@ -32,12 +32,12 @@
                  email]
                 {:builder-fn rs/as-unqualified-lower-maps})))
 
-  (withdraw-balance [this user-id amount]
-    (when-not (get-user this user-id)
+  (withdraw-balance [sourceable user-id amount]
+    (when-not (get-user sourceable user-id)
       (throw (ex-info "User not found." {})))
 
     (let [updated
-          (-> (sql/query (:connection this)
+          (-> (sql/query sourceable
                          ["UPDATE operations.user
                            SET user_balance = user_balance - ?
                            WHERE id = ?
@@ -53,10 +53,10 @@
         0 (throw (ex-info (str "Insufficient balance: Unable to withdraw "
                                amount
                                ". Current balance is "
-                               (:user_balance (get-user this user-id))
+                               (:user_balance (get-user sourceable user-id))
                                ".")
                           {}))
-        1 (first (sql/find-by-keys (:connection this)
+        1 (first (sql/find-by-keys sourceable
                                    :operations.user
                                    {:id user-id}
                                    {:columns [:user_balance]
